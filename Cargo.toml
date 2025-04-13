@@ -1,0 +1,59 @@
+# SPDX-FileCopyrightText: 2022 - 2024 Ali Sajid Imami
+#
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "variant-forge"
+version = "1.0.0-next.1"
+edition = "2021"
+readme = "README.md"
+description = ""
+rust-version = "1.78.1"
+repository = "https://github.com/${gh_user}/${project-name}"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "variant_forge_lib"
+path = "src/variant_forge_lib/lib.rs"
+crate-type = ["lib"]
+
+[[bin]]
+name = "variant-forge"
+path = "src/variant_forge/main.rs"
+
+[dependencies]
+anyhow = { version = "1", features = ["backtrace"] }
+clap = { version = "4", features = ["string", "unicode", "derive"] }
+color-eyre = "0.6"
+
+[dev-dependencies]
+rstest = "0.25.0"
+
+[profile.dev]
+opt-level = 1
+debug = true
+
+[profile.release]
+opt-level = 'z'   # Optimize for size
+lto = true        # Enable link-time optimization
+codegen-units = 1 # Compile the whole crate at once
+panic = "abort"   # Abort on panic
+strip = "symbols" # Strip debug symbols
+
+### Specify / Override the specific lints
+
+[lints.rustdoc]
+broken_intra_doc_links = "deny"
+missing_docs = "forbid"
+invalid_rust_codeblocks = "deny"
+redundant_explicit_links = "deny"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+enum_glob_use = "deny"
+pedantic = "deny"
+nursery = "deny"
+unwrap_used = "deny"
