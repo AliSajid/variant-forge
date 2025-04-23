@@ -16,7 +16,7 @@ SPDX-License-Identifier: MIT
 ![GitHub issues](https://img.shields.io/github/issues/AliSajid/variant-forge)
 ![REUSE Compliance](https://img.shields.io/reuse/compliance/github.com%2FAliSajid%2Faaprop)
 
-An application for calculating distances between proteins as a result of amino-acid replacement"
+An application for calculating distances between proteins as a result of amino-acid replacement
 
 ## Build Status
 
@@ -28,4 +28,4 @@ An application for calculating distances between proteins as a result of amino-a
 
 ## Current Status
 
-The current status of the project is ...
+The current status of the project is
