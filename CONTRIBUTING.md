@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2023 - 2024 Ali Sajid Imami
+SPDX-FileCopyrightText: 2025 Ali Sajid Imami
 
 SPDX-License-Identifier: Apache-2.0
 SPDX-License-Identifier: MIT
@@ -45,7 +45,7 @@ If you then still feel the need to ask a question and need clarification, we rec
 
 - Open an [Issue](https://github.com/${gh_user}/${project-name}/issues/new).
 - Provide as much context as you can about what you're running into.
-- Provide project and platform versions (`rustc -V`, etc), depending on what seems relevant.
+- Provide project and platform versions (`rustc -V`, etc.), depending on what seems relevant.
 
 We then take care of the issue as soon as possible.
 
@@ -69,10 +69,10 @@ A good bug report shouldn't leave others needing to chase you up for more inform
 - Make sure that you are using the latest version.
 - Determine if your bug is really a bug and not an error on your side e.g. using incompatible environment components/versions (If you are looking for support, you might want to check [this section](#i-have-a-question)).
 - To see if other users have experienced (and potentially already solved) the same issue you are having, check if there is not already a bug report existing for your bug or error in the [bug tracker](https://github.com/${gh_user}/${project-name}/issues?q=label%3Abug).
-- Also make sure to search the internet (including Stack Overflow) to see if users outside of the GitHub community have discussed the issue.
+- Also make sure to search the internet (including Stack Overflow) to see if users outside the GitHub community have discussed the issue.
 - Collect information about the bug:
   - Stack trace (Traceback). We use RUST_BACKTRACE=1 to get a full stack trace.
-  - OS, Platform and Version (Windows, Linux, macOS, x86, ARM)
+  - OS, Platform and Version (Windows, Linux, macos, x86, ARM)
   - Version of Rust, Cargo, and other environment components if applicable
   - Possibly your input and the output
   - Can you reliably reproduce the issue? And can you also reproduce it with older versions?
