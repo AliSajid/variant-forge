@@ -31,7 +31,7 @@ jobs:
           packages: write
         steps:
             - name: Harden Runner
-              uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+              uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
               with:
                 egress-policy: audit
 
@@ -43,7 +43,7 @@ jobs:
 
             - name: Generate Docker Metadata
               id: meta
-              uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5.6.1
+              uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5.7.0
               with:
                   images: |
                     ${{env.DOCKER_REPOSITORY_NAME}}/${{env.REPOSITORY_NAME}}
@@ -63,31 +63,31 @@ jobs:
               run: echo "${{ steps.meta.outputs.json }}"
 
             - name: Login to DockerHub
-              uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+              uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
               with:
                   username: ${{ env.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_TOKEN }}
 
             - name: Login to GitHub Container Registry
-              uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+              uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
               with:
                   registry: ghcr.io
                   username: ${{ github.actor }}
                   password: ${{ secrets.GHCR_TOKEN }}
 
             - name: Setup QEMU
-              uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3.2.0
+              uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3.6.0
               with:
                 platforms: aarch64,amd64
 
             - name: Setup Buildx
-              uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5 # v3.8.0
+              uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
               with:
                 version: "lab:latest"
 
             - name: Build and Push Docker Images
               id: build
-              uses: docker/build-push-action@48aba3b46d1b1fec4febb7c5d0c644b249a11355 # v6.10.0
+              uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
               env:
                 SOURCE_DATE_EPOCH: ${{ env.SOURCE_DATE_EPOCH }}
               with:
@@ -106,12 +106,12 @@ jobs:
               run: echo "${{join(steps.build.outputs.*, '\n')}}"
 
             - name: Install cosign
-              uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da # v3.7.0
+              uses: sigstore/cosign-installer@3454372f43399081ed03b604cb2d021dabca52bb # v3.8.2
               with:
                 cosign-release: ${{ env.COSIGN_RELEASE_VERSION }}
 
             - name: Install Syft
-              uses: anchore/sbom-action/download-syft@df80a981bc6edbc4e220a492d3cbe9f5547a6e75 # v0.17.9
+              uses: anchore/sbom-action/download-syft@e11c554f704a0b820cbf8c51673f6945e0731532 # v0.20.0
               with:
                 syft-version: ${{ env.SYFT_VERSION }}
 
@@ -158,7 +158,7 @@ jobs:
               shell: bash
 
             - name: Upload verification results
-              uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
               with:
                 path: /tmp/cosign-verifications
                 name: cosign-verifications
