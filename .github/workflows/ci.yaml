@@ -164,6 +164,7 @@ jobs:
         secrets: inherit # pragma: allowlist secret
     build-container:
       permissions:
+        contents: read
         id-token: write
         packages: write
       needs: [ci]
