@@ -12,7 +12,7 @@
 
 # Use the official Rust image as the builder image
 # Use the 1.75 version of the Rust image since it's the MSRV (Minimum Supported Rust Version) for the aaprop project
-FROM rust:1.79.0 as builder
+FROM rust:1.79.0 AS builder
 
 # Set the working directory in the builder image to /usr/src
 WORKDIR /usr/src
@@ -32,7 +32,7 @@ COPY Cargo.toml Cargo.lock ./
 # Build the Rust project
 # This step is done separately to take advantage of Docker's layer caching
 # Any changes in the source code will not invalidate the cached dependencies
-RUN cargo build --lib --no-default-features --release
+RUN cargo build --lib  --release
 
 # Remove the auto-generated main.rs file
 # This file will be replaced with the actual source code
@@ -46,7 +46,7 @@ RUN rm -rfv target/release/deps/variant-forge*
 ADD src src
 
 # Build the Rust project with the actual source code
-RUN cargo build --features standalone --no-default-features --release --locked
+RUN cargo build  --release --locked
 
 # Use the official distroless image as the base image
 FROM gcr.io/distroless/cc-debian12
