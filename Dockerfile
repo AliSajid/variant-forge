@@ -12,7 +12,7 @@
 
 # Use the official Rust image as the builder image
 # Use the 1.75 version of the Rust image since it's the MSRV (Minimum Supported Rust Version) for the aaprop project
-FROM rust:1.78.1 as builder
+FROM rust:1.79.0 as builder
 
 # Set the working directory in the builder image to /usr/src
 WORKDIR /usr/src

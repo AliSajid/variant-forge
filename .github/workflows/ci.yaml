@@ -62,13 +62,13 @@ jobs:
                     - stable
                     - beta
                     - nightly
-                    - 1.78.1 # MSRV
+                    - 1.79.0 # MSRV
                 os:
                     - ubuntu
                 include:
                     - os: ubuntu
                       logo: ubuntu
-                    - rust: 1.78.1 # MSRV
+                    - rust: 1.79.0 # MSRV
                       label: msrv
                     - rust: stable
                       label: stable
