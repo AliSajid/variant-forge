@@ -13,8 +13,8 @@ We support the following versions of `variant-forge`
 
 | Version | Supported          |
 | ------- | ------------------ |
-| v1.x    | :white_check_mark: |
-| v0.x    | :x:                |
+| v1.x    | ✅|
+| v0.x    | ✅                |
 
 ## Reporting a Vulnerability
 
