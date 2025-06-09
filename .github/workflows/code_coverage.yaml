@@ -11,6 +11,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: coverage-${{ github.workflow }}-${{ github.sha }}
+  cancel-in-progress: false
+
 jobs:
     test:
         name: Generate Coverage
@@ -18,6 +22,7 @@ jobs:
         container:
             image: xd009642/tarpaulin:develop-nightly@sha256:a9fa7990264a8ed0e7b094f4db269a07b0579a99487c5dd431121c6d6ba7eadc
             options: --security-opt seccomp=unconfined
+
         steps:
             - name: Harden Runner
               uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0

@@ -4,13 +4,16 @@
 # SPDX-License-Identifier: MIT
 
 ---
-name: Next semantic-release version
+name: Check if there's a new release
 on:
     workflow_call:
         outputs:
             new-release-published:
                 description: Indicates whether a new release will be published. The value is a string, either 'true' or 'false'.
                 value: ${{ jobs.get-next-version.outputs.new-release-published }}
+            new-release-version:
+                description: Contains the next version if there is going to be a new version
+                value: ${{jobs.get-next-version.outputs.new-release-version}}
 permissions:
   contents: read
 
@@ -31,10 +34,12 @@ jobs:
               with:
                 fetch-depth: 0
                 persist-credentials: false
+
             - name: Configure Node.js
               uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
               with:
-                node-version: lts/*
+                node-version: 22
+
             - name: Cache action npm dependencies
               uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
               id: cache-node-modules
@@ -42,11 +47,13 @@ jobs:
                 path: ${{ runner.temp }}/.semantic-release-action_next-release-version/node_modules
                 key: |
                     semantic-release-action/next-release-version-${{ runner.os }}-node-${{ hashFiles('${{ github.action_path }}/package-lock.json') }}
+
             - name: Install dependencies on cache miss
               if: steps.cache-node-modules.outputs.cache-hit != 'true'
               run: |
                 npm install -g semantic-release semantic-release-export-data
               shell: bash
+
             - name: Get next release version
               id: get-next-version
               env:
