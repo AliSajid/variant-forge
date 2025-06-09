@@ -10,7 +10,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: docker-{github.event.ref}
+  group: docker-${{ github.workflow }}-${{ github.sha }}
+  cancel-in-progress: false
 
 env:
   DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
@@ -162,3 +163,15 @@ jobs:
                 path: /tmp/cosign-verifications
                 name: cosign-verifications
                 compression-level: 9
+
+            - name: Run Trivy vulnerability scanner
+              uses: aquasecurity/trivy-action@v0.31.0
+              with:
+                image-ref: ${{ env.DOCKER_REPOSITORY_NAME }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
+                format: sarif
+                output: trivy-results.sarif
+
+            - name: Upload to code-scanning
+              uses: github/codeql-action/upload-sarif@fca7ace96b7d713c7035871441bd52efbe39e27e # v3
+              with:
+                sarif_file: trivy-results.sarif
