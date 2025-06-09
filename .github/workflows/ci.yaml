@@ -10,6 +10,7 @@ on:
     pull_request:
         branches:
             - main
+            - next
         types:
             - closed
     workflow_dispatch:
@@ -39,7 +40,7 @@ jobs:
           id: changed_dirs
           uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
           with:
-            base: ${{ github.ref }}
+            base: ${{ github.event.pull_request.base.sha || 'HEAD~1' }}
             filters: |
               source:
                 - "src/**/*"
@@ -50,6 +51,7 @@ jobs:
               book:
                 - "guide/src/*.md"
                 - "guide/book.toml"
+                - "README.md"
     ci:
         runs-on: ${{matrix.os}}-latest
         needs: [check_changed_dirs]
@@ -98,24 +100,30 @@ jobs:
             - name: Cache dependencies
               if: ${{ needs.check_changed_dirs.outputs.source_changed == 'true' }}
               uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2.7.8
+
             - name: Cargo Build
               if: ${{ needs.check_changed_dirs.outputs.source_changed == 'true' }}
               run: cargo build --verbose
+
             - name: Cargo Test
               if: ${{ needs.check_changed_dirs.outputs.source_changed == 'true' }}
               run: cargo test
+
             - name: Cargo Format
               if: ${{ needs.check_changed_dirs.outputs.source_changed == 'true' }}
               run: cargo +nightly fmt --all -- --check
+
             - name: Cargo Lint
               if: ${{ needs.check_changed_dirs.outputs.source_changed == 'true' }}
               run: cargo clippy -- -D warnings
+
             - name: Wait before badge creation
               if: ${{ needs.check_changed_dirs.outputs.source_changed == 'true' }}
               uses: AliSajid/random-wait-action@cd6450856f807a0b8e50d872f4c80f09249ffe59 # v2.11.0
               with:
                 minimum: ${{env.MINIMUM_WAIT}}
                 maximum: ${{env.MAXIMUM_WAIT}}
+
             - name: Create Awesome Badge - Success
               uses: schneegans/dynamic-badges-action@e9a478b16159b4d31420099ba146cdc50f134483 # v1.7.0
               if: success()
@@ -127,6 +135,7 @@ jobs:
                 namedLogo: ${{matrix.logo}}
                 message: Succeeded
                 color: green
+
             - name: Create Awesome Badge - Failure
               uses: schneegans/dynamic-badges-action@e9a478b16159b4d31420099ba146cdc50f134483 # v1.7.0
               if: failure()
@@ -138,30 +147,36 @@ jobs:
                 label: Build
                 message: Failed
                 isError: true
+
             - name: Set Result
               if: always()
               id: result
               run: echo "result=${{job.status}}" >> "$GITHUB_OUTPUT"
+
     generate_code_coverage:
         uses: ./.github/workflows/code_coverage.yaml
         needs: [ci, check_changed_dirs]
         if: ${{needs.check_changed_dirs.outputs.source_changed == 'true'}}
         secrets: inherit # pragma: allowlist secret
+
     generate_mdbook:
         uses: ./.github/workflows/deploy_mdbook.yaml
         needs: [check_changed_dirs]
         if: ${{needs.check_changed_dirs.outputs.book_changed == 'true'}}
         secrets: inherit # pragma: allowlist secret
+
     get-next-version:
         uses: ./.github/workflows/get_next_version.yaml
         needs: [ci, check_changed_dirs]
         if: ${{needs.ci.outputs.result == 'success'}}
         secrets: inherit # pragma: allowlist secret
+
     semantic-release:
         needs: [ci, get-next-version]
         if: ${{needs.get-next-version.outputs.new-release-published == 'true'}}
         uses: ./.github/workflows/release.yaml
         secrets: inherit # pragma: allowlist secret
+
     build-container:
       permissions:
         contents: read
