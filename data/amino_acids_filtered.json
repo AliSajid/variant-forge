@@ -1,0 +1,102 @@
+[
+    {
+        "abbreviation": "A",
+        "name": "Alanine",
+        "short_name": "Ala"
+    },
+    {
+        "abbreviation": "C",
+        "name": "Cysteine",
+        "short_name": "Cys"
+    },
+    {
+        "abbreviation": "D",
+        "name": "Aspartic Acid",
+        "short_name": "Asp"
+    },
+    {
+        "abbreviation": "E",
+        "name": "Glutamic Acid",
+        "short_name": "Glu"
+    },
+    {
+        "abbreviation": "F",
+        "name": "Phenylalanine",
+        "short_name": "Phe"
+    },
+    {
+        "abbreviation": "G",
+        "name": "Glycine",
+        "short_name": "Gly"
+    },
+    {
+        "abbreviation": "H",
+        "name": "Histidine",
+        "short_name": "His"
+    },
+    {
+        "abbreviation": "I",
+        "name": "Isoleucine",
+        "short_name": "Ile"
+    },
+    {
+        "abbreviation": "K",
+        "name": "Lysine",
+        "short_name": "Lys"
+    },
+    {
+        "abbreviation": "L",
+        "name": "Leucine",
+        "short_name": "Leu"
+    },
+    {
+        "abbreviation": "M",
+        "name": "Methionine",
+        "short_name": "Met"
+    },
+    {
+        "abbreviation": "N",
+        "name": "Asparagine",
+        "short_name": "Asn"
+    },
+    {
+        "abbreviation": "P",
+        "name": "Proline",
+        "short_name": "Pro"
+    },
+    {
+        "abbreviation": "Q",
+        "name": "Glutamine",
+        "short_name": "Gln"
+    },
+    {
+        "abbreviation": "R",
+        "name": "Arginine",
+        "short_name": "Arg"
+    },
+    {
+        "abbreviation": "S",
+        "name": "Serine",
+        "short_name": "Ser"
+    },
+    {
+        "abbreviation": "T",
+        "name": "Threonine",
+        "short_name": "Thr"
+    },
+    {
+        "abbreviation": "V",
+        "name": "Valine",
+        "short_name": "Val"
+    },
+    {
+        "abbreviation": "W",
+        "name": "Tryptophan",
+        "short_name": "Trp"
+    },
+    {
+        "abbreviation": "Y",
+        "name": "Tyrosine",
+        "short_name": "Tyr"
+    }
+]

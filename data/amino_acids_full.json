@@ -1,0 +1,263 @@
+[
+    {
+        "abbreviation": "A",
+        "codon_count": 4,
+        "codons": [
+            "GCU",
+            "GCC",
+            "GCA",
+            "GCG"
+        ],
+        "molecular_weight": 89.09,
+        "name": "Alanine",
+        "short_name": "Ala",
+        "side_chain": "Nonpolar"
+    },
+    {
+        "abbreviation": "C",
+        "codon_count": 2,
+        "codons": [
+            "UGU",
+            "UGC"
+        ],
+        "molecular_weight": 121.16,
+        "name": "Cysteine",
+        "short_name": "Cys",
+        "side_chain": "Nonpolar"
+    },
+    {
+        "abbreviation": "D",
+        "codon_count": 2,
+        "codons": [
+            "GAU",
+            "GAC"
+        ],
+        "molecular_weight": 133.1,
+        "name": "Aspartic Acid",
+        "short_name": "Asp",
+        "side_chain": "Acidic"
+    },
+    {
+        "abbreviation": "E",
+        "codon_count": 2,
+        "codons": [
+            "GAA",
+            "GAG"
+        ],
+        "molecular_weight": 147.13,
+        "name": "Glutamic Acid",
+        "short_name": "Glu",
+        "side_chain": "Acidic"
+    },
+    {
+        "abbreviation": "F",
+        "codon_count": 2,
+        "codons": [
+            "UUU",
+            "UUC"
+        ],
+        "molecular_weight": 165.19,
+        "name": "Phenylalanine",
+        "short_name": "Phe",
+        "side_chain": "Nonpolar"
+    },
+    {
+        "abbreviation": "G",
+        "codon_count": 4,
+        "codons": [
+            "GGU",
+            "GGC",
+            "GGA",
+            "GGG"
+        ],
+        "molecular_weight": 75.07,
+        "name": "Glycine",
+        "short_name": "Gly",
+        "side_chain": "Nonpolar"
+    },
+    {
+        "abbreviation": "H",
+        "codon_count": 2,
+        "codons": [
+            "CAU",
+            "CAC"
+        ],
+        "molecular_weight": 155.16,
+        "name": "Histidine",
+        "short_name": "His",
+        "side_chain": "Positive"
+    },
+    {
+        "abbreviation": "I",
+        "codon_count": 3,
+        "codons": [
+            "AUU",
+            "AUC",
+            "AUA"
+        ],
+        "molecular_weight": 131.17,
+        "name": "Isoleucine",
+        "short_name": "Ile",
+        "side_chain": "Nonpolar"
+    },
+    {
+        "abbreviation": "K",
+        "codon_count": 2,
+        "codons": [
+            "AAA",
+            "AAG"
+        ],
+        "molecular_weight": 146.19,
+        "name": "Lysine",
+        "short_name": "Lys",
+        "side_chain": "Positive"
+    },
+    {
+        "abbreviation": "L",
+        "codon_count": 6,
+        "codons": [
+            "UUA",
+            "UUG",
+            "CUU",
+            "CUC",
+            "CUA",
+            "CUG"
+        ],
+        "molecular_weight": 131.17,
+        "name": "Leucine",
+        "short_name": "Leu",
+        "side_chain": "Nonpolar"
+    },
+    {
+        "abbreviation": "M",
+        "codon_count": 1,
+        "codons": [
+            "AUG"
+        ],
+        "molecular_weight": 149.21,
+        "name": "Methionine",
+        "short_name": "Met",
+        "side_chain": "Nonpolar"
+    },
+    {
+        "abbreviation": "N",
+        "codon_count": 2,
+        "codons": [
+            "AAU",
+            "AAC"
+        ],
+        "molecular_weight": 132.12,
+        "name": "Asparagine",
+        "short_name": "Asn",
+        "side_chain": "Polar"
+    },
+    {
+        "abbreviation": "P",
+        "codon_count": 4,
+        "codons": [
+            "CCU",
+            "CCC",
+            "CCA",
+            "CCG"
+        ],
+        "molecular_weight": 115.13,
+        "name": "Proline",
+        "short_name": "Pro",
+        "side_chain": "Nonpolar"
+    },
+    {
+        "abbreviation": "Q",
+        "codon_count": 2,
+        "codons": [
+            "CAA",
+            "CAG"
+        ],
+        "molecular_weight": 146.15,
+        "name": "Glutamine",
+        "short_name": "Gln",
+        "side_chain": "Polar"
+    },
+    {
+        "abbreviation": "R",
+        "codon_count": 6,
+        "codons": [
+            "CGU",
+            "CGC",
+            "CGA",
+            "CGG",
+            "AGA",
+            "AGG"
+        ],
+        "molecular_weight": 174.2,
+        "name": "Arginine",
+        "short_name": "Arg",
+        "side_chain": "Positive"
+    },
+    {
+        "abbreviation": "S",
+        "codon_count": 6,
+        "codons": [
+            "UCU",
+            "UCC",
+            "UCA",
+            "UCG",
+            "AGU",
+            "AGC"
+        ],
+        "molecular_weight": 105.09,
+        "name": "Serine",
+        "short_name": "Ser",
+        "side_chain": "Polar"
+    },
+    {
+        "abbreviation": "T",
+        "codon_count": 4,
+        "codons": [
+            "ACU",
+            "ACC",
+            "ACA",
+            "ACG"
+        ],
+        "molecular_weight": 119.12,
+        "name": "Threonine",
+        "short_name": "Thr",
+        "side_chain": "Polar"
+    },
+    {
+        "abbreviation": "V",
+        "codon_count": 4,
+        "codons": [
+            "GUU",
+            "GUC",
+            "GUA",
+            "GUG"
+        ],
+        "molecular_weight": 117.15,
+        "name": "Valine",
+        "short_name": "Val",
+        "side_chain": "Nonpolar"
+    },
+    {
+        "abbreviation": "W",
+        "codon_count": 1,
+        "codons": [
+            "UGG"
+        ],
+        "molecular_weight": 204.23,
+        "name": "Tryptophan",
+        "short_name": "Trp",
+        "side_chain": "Nonpolar"
+    },
+    {
+        "abbreviation": "Y",
+        "codon_count": 2,
+        "codons": [
+            "UAU",
+            "UAC"
+        ],
+        "molecular_weight": 181.19,
+        "name": "Tyrosine",
+        "short_name": "Tyr",
+        "side_chain": "Polar"
+    }
+]
