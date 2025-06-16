@@ -15,6 +15,7 @@ path = [
     "meta/vale-styles/config/**/**.txt",
     "CHANGELOG.md",
     "OSSMETADATA",
+    "data/wikitables/README.md",
 ]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2025 Ali Sajid Imami"
@@ -34,6 +35,18 @@ SPDX-License-Identifier = "Apache-2.0 AND MIT"
 
 [[annotations]]
 path = ["guide/book.toml", "guide/src/*.md"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 Ali Sajid Imami"
+SPDX-License-Identifier = "MIT AND Apache-2.0"
+
+[[annotations]]
+path = ["data/wikitables/*.txt"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Wikipedia Contributors"
+SPDX-License-Identifier = "CC-BY-SA-4.0"
+
+[[annotations]]
+path = ["data/*.tsv"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2025 Ali Sajid Imami"
 SPDX-License-Identifier = "MIT AND Apache-2.0"
