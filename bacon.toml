@@ -22,15 +22,11 @@ command = [
     "clippy",
     "--color",
     "always",
+    "--all-targets",
+    "--all-features",
     "--",
-    "-W",
-    "clippy::pedantic",
-    "-W",
-    "clippy::nursery",
-    "-W",
-    "clippy::unwrap_used",
-    "-W",
-    "clippy::expect_used",
+    "-D",
+    "warnings",
 ]
 need_stdout = false
 apply_gitignore = false
