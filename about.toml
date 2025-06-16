@@ -21,3 +21,6 @@ ignore-transitive-dependencies = false
 
 # Try to resolve any time clearlydefined.io marks something as NOASSERTION
 filter-noassertion = true
+
+[unicode-ident]
+accepted = ["Unicode-3.0"]
