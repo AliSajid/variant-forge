@@ -46,7 +46,12 @@ SPDX-FileCopyrightText = "Wikipedia Contributors"
 SPDX-License-Identifier = "CC-BY-SA-4.0"
 
 [[annotations]]
-path = ["data/*.csv", "data/*.json"]
+path = [
+    "data/*.csv",
+    "data/*.json",
+    "data/processed/*.csv",
+    "data/dataset_document.xlsx",
+]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2025 Ali Sajid Imami"
 SPDX-License-Identifier = "MIT AND Apache-2.0"
