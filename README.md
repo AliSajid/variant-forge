@@ -41,7 +41,7 @@ An application for calculating distances between proteins as a result of amino-a
 | Stable|![Ubuntu x Stable Rust](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/AliSajid/2feb2c401cf1cd81ab15e0978f2835d0/raw/ubuntu-stable.json)|
 | Beta|![Ubuntu x Beta Rust](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/AliSajid/2feb2c401cf1cd81ab15e0978f2835d0/raw/ubuntu-beta.json)|
 | Nightly|![Ubuntu x Nightly Rust](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/AliSajid/2feb2c401cf1cd81ab15e0978f2835d0/raw/ubuntu-nightly.json)|
-| MSRV (1.79.0)|![Ubuntu x MSRV Rust](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/AliSajid/2feb2c401cf1cd81ab15e0978f2835d0/raw/ubuntu-msrv.json)|
+| MSRV (1.85.0)|![Ubuntu x MSRV Rust](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/AliSajid/2feb2c401cf1cd81ab15e0978f2835d0/raw/ubuntu-msrv.json)|
 
 
 ## Current Status
