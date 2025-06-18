@@ -51,7 +51,14 @@ path = [
     "data/*.json",
     "data/processed/*.csv",
     "data/dataset_document.xlsx",
+    "src/variant_forge_lib/datasets/*.rs",
 ]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2025 Ali Sajid Imami"
 SPDX-License-Identifier = "MIT AND Apache-2.0"
+
+[[annotations]]
+path = ["data/docs/*.md"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 Ali Sajid Imami"
+SPDX-License-Identifier = "CC-BY-SA-4.0"
