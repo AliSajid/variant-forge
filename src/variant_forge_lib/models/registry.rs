@@ -3,6 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-pub mod amino_acid;
-pub mod distance;
-pub mod registry;
+#[allow(missing_docs)]
+pub enum Registry {
+    EPSTEIN,
+    EXCHANGABILITY,
+    GRANTHAM,
+    MIYATA,
+    SNEATH,
+}

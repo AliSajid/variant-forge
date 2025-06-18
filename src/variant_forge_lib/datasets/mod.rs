@@ -3,6 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-pub mod amino_acid;
-pub mod distance;
-pub mod registry;
+pub mod epstein;
+pub mod exchangability;
+pub mod grantham;
+pub mod miyata;
+pub mod sneath;

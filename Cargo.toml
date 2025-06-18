@@ -6,7 +6,7 @@
 [package]
 name = "variant-forge"
 version = "1.0.0-next.1"
-edition = "2021"
+edition = "2024"
 readme = "README.md"
 description = ""
 repository = "https://github.com/${gh_user}/${project-name}"
@@ -46,12 +46,12 @@ strip = "symbols" # Strip debug symbols
 
 [lints.rustdoc]
 broken_intra_doc_links = "deny"
-missing_docs = "forbid"
 invalid_rust_codeblocks = "deny"
 redundant_explicit_links = "deny"
 
 [lints.rust]
 unsafe_code = "forbid"
+missing_docs = "warn"
 
 [lints.clippy]
 enum_glob_use = "deny"
