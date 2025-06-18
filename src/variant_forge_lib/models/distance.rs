@@ -147,7 +147,10 @@ pub trait DistanceMetric {
     /// let grantham = variant_forge_lib::Grantham;
     /// let epstein = variant_forge_lib::Epstein;
     ///
-    /// println!("Is Gratham distance Symmetric? {}", grantham.is_symmetric());
+    /// println!(
+    ///     "Is Grantham distance Symmetric? {}",
+    ///     grantham.is_symmetric()
+    /// );
     /// println!("Is Epstein distance Symmetric? {}", epstein.is_symmetric());
     /// ```
     fn is_symmetric(&self) -> bool;
