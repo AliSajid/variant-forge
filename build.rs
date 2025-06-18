@@ -16,6 +16,7 @@ use std::{
         Write,
     },
     path::Path,
+    process::Command,
 };
 
 use csv::Reader;
@@ -84,6 +85,30 @@ fn main() {
         println!("cargo:rerun-if-changed={}", dataset.doc_file);
         generate_dataset(dataset).expect("Failed to generate dataset");
     }
+}
+
+/// Format a Rust file using rustfmt
+fn format_rust_file(file_path: &str) -> std::io::Result<()> {
+    let output = Command::new("rustfmt")
+        .arg("+nightly")
+        .arg("--edition")
+        .arg("2024") // Specify Rust edition, adjust if needed
+        .arg(file_path)
+        .output()?;
+
+    if output.status.success() {
+        println!("Successfully formatted: {file_path}");
+    } else {
+        eprintln!(
+            "rustfmt failed for {}: {}",
+            file_path,
+            String::from_utf8_lossy(&output.stderr)
+        );
+        // Don't fail the build if rustfmt fails, just warn
+        eprintln!("Warning: Generated file {file_path} may not be properly formatted");
+    }
+
+    Ok(())
 }
 
 fn normalize_amino_acid_names() -> HashMap<String, String> {
@@ -309,6 +334,15 @@ fn generate_dataset(dataset: &Dataset) -> std::io::Result<()> {
     }
     writeln!(file, "        Some(Self::MATRIX[idx])")?;
     writeln!(file, "    }}\n}}")?;
+
+    // Ensure the file is properly closed before formatting
+    drop(file);
+
+    // Format the generated file
+    if let Err(e) = format_rust_file(dataset.output_file) {
+        eprintln!("Warning: Failed to format {}: {}", dataset.output_file, e);
+        // Continue with the build even if formatting fails
+    }
 
     Ok(())
 }
