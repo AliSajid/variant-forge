@@ -60,7 +60,7 @@ const DATASETS: &[Dataset] = &[
         doc_file:    "data/docs/sneath.md",
         output_file: "src/variant_forge_lib/datasets/sneath.rs",
         value_type:  "u16",
-        symmetric:   false,
+        symmetric:   true,
     },
     Dataset {
         name:        "Exchangability",
