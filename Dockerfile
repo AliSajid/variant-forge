@@ -11,7 +11,7 @@
 #    It copies the binary from the builder image and sets it as the entry point of the container
 
 # Use the official Rust image as the builder image
-# Use the 1.75 version of the Rust image since it's the MSRV (Minimum Supported Rust Version) for the aaprop project
+# Use the 1.85 version of the Rust image since it's the MSRV (Minimum Supported Rust Version) for the aaprop project
 FROM rust:1.85.0 AS builder
 
 # Set the working directory in the builder image to /usr/src
