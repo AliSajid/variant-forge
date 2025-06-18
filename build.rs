@@ -212,7 +212,7 @@ fn generate_dataset(dataset: &Dataset) -> std::io::Result<()> {
     writeln!(file, "use crate::AminoAcid;\nuse crate::DistanceMetric;\n")?;
 
     for line in doc_content.lines() {
-        writeln!(file, "/// {line}")?;
+        writeln!(file, "///{line}")?;
     }
     // Write the struct
     writeln!(
