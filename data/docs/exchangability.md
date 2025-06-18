@@ -11,7 +11,7 @@
 
  **Value type**: `f32`
 
- **Symmetry**: Yes (symmetric)
+ **Symmetry**: No (asymmetric)
 
  **Missing values**: Represented as `f32::NAN` or skipped with `"."` in the CSV
 
