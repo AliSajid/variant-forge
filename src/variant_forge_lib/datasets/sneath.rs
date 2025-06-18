@@ -1,6 +1,6 @@
 //! Auto-generated from data/processed/sneath.csv
 //! Matrix: Sneath
-//! Symmetric: false
+//! Symmetric: true
 use crate::{
     AminoAcid,
     DistanceMetric,
@@ -82,12 +82,17 @@ impl DistanceMetric for Sneath {
     }
 
     fn is_symmetric(&self) -> bool {
-        false
+        true
     }
 
     fn lookup(&self, a: AminoAcid, b: AminoAcid) -> Option<Self::Value> {
         let i = a.index() * 20 + b.index();
-        let idx = i;
+        let j = b.index() * 20 + a.index();
+        let idx = if i <= j {
+            i
+        } else {
+            j
+        };
         Some(Self::MATRIX[idx])
     }
 }
