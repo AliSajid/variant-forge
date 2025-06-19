@@ -3,6 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
+//! Core definitions and utilities for amino acid representation.
+//!
+//! Provides the [`AminoAcid`] enum and associated functionality
+//! for indexing, display, and conversion from strings.
+
 use std::fmt::{
     self,
     Display,
@@ -42,7 +47,7 @@ use std::fmt::{
 /// # Examples
 ///
 /// ```rust
-/// use variant_forge_lib::AminoAcid;
+/// use variant_forge_lib::models::AminoAcid;
 ///
 /// // Convert from character
 /// let ala = AminoAcid::from_char('A').unwrap();
@@ -135,7 +140,7 @@ impl AminoAcid {
     /// # Examples
     ///
     /// ```rust
-    /// use variant_forge_lib::AminoAcid;
+    /// use variant_forge_lib::models::AminoAcid;
     ///
     /// // Count total amino acids
     /// assert_eq!(AminoAcid::ALL.len(), 20);
@@ -182,7 +187,7 @@ impl AminoAcid {
     /// # Examples
     ///
     /// ```rust
-    /// use variant_forge_lib::AminoAcid;
+    /// use variant_forge_lib::models::AminoAcid;
     ///
     /// assert_eq!(AminoAcid::A.index(), 0);
     /// assert_eq!(AminoAcid::V.index(), 19);
@@ -234,7 +239,7 @@ impl AminoAcid {
     /// # Examples
     ///
     /// ```rust
-    /// use variant_forge_lib::AminoAcid;
+    /// use variant_forge_lib::models::AminoAcid;
     ///
     /// assert_eq!(AminoAcid::from_char('A'), Some(AminoAcid::A));
     /// assert_eq!(AminoAcid::from_char('a'), Some(AminoAcid::A)); // Case insensitive
@@ -292,7 +297,7 @@ impl AminoAcid {
     /// # Examples
     ///
     /// ```rust
-    /// use variant_forge_lib::AminoAcid;
+    /// use variant_forge_lib::models::AminoAcid;
     ///
     /// // Full names
     /// assert_eq!(AminoAcid::from_name("Alanine"), Some(AminoAcid::A));
@@ -339,7 +344,7 @@ impl AminoAcid {
 /// # Examples
 ///
 /// ```rust
-/// use variant_forge_lib::AminoAcid;
+/// use variant_forge_lib::models::AminoAcid;
 ///
 /// let ala = AminoAcid::A;
 /// println!("{}", ala); // Prints: A

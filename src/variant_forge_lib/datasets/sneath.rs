@@ -1,82 +1,108 @@
-//! Auto-generated from data/processed/sneath.csv
-//! Matrix: Sneath
+// SPDX-FileCopyrightText: 2025 Ali Sajid Imami
+// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT
+
+//! Auto-generated from `data/processed/sneath.csv`
+//! Matrix: `Sneath`
 //! Symmetric: true
-use crate::{
+
+use crate::models::{
     AminoAcid,
     DistanceMetric,
 };
 
 /// # Sneath Similarity Index Matrix
 ///
-/// The Sneath matrix encodes the similarity between amino acids based on shared features
-/// across multiple biochemical and structural properties. It is derived from binary feature
-/// profiles for each amino acid, such as polarity, aromaticity, size, and charge.
+///  The Sneath matrix encodes the similarity between amino acids based on shared features
+///  across multiple biochemical and structural properties. It is derived from binary feature
+/// profiles  for each amino acid, such as polarity, aromaticity, size, and charge.
 ///
-/// The Sneath index is a symmetric similarity matrix (higher values mean greater similarity),
-/// rather than a distance matrix.
+///  The Sneath index is a symmetric similarity matrix (higher values mean greater similarity),
+///  rather than a distance matrix.
 ///
-/// **Citation**:
-/// Sneath, P. H. A. (1966). Relations between chemical structure and biological activity in
-/// peptides. *Journal of Theoretical Biology*, 12(2), 157–195. <https://doi.org/10.1016/0022-5193(66)90112-9>
+///  **Citation**:
+///  Sneath, P. H. A. (1966). Relations between chemical structure and biological activity in
+/// peptides.  *Journal of Theoretical Biology*, 12(2), 157–195. <https://doi.org/10.1016/0022-5193(66)90112-9>
 ///
-/// **Value type**: `u16`
+///  **Value type**: `u16`
 ///
-/// **Symmetry**: Yes (symmetric)
+///  **Symmetry**: Yes (symmetric)
 ///
-/// **Missing values**: None; all values are filled
+///  **Missing values**: None; all values are filled
 ///
-/// **Amino Acid Row/Column Order**:
-/// A, R, N, D, C, Q, E, G, H, I, L, K, M, F, P, S, T, W, Y, V
-#[derive(Debug, Copy, Clone)]
+///  **Amino Acid Row/Column Order**:
+///  A, R, N, D, C, Q, E, G, H, I, L, K, M, F, P, S, T, W, Y, V
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Sneath;
 
 impl Sneath {
-    const MATRIX: [u16; 400] = [
-        0, 37, 25, 30, 13, 26, 34, 9, 29, 17, 15, 26, 25, 26, 16, 16, 20, 36, 34, 12, 37, 0, 31,
-        39, 36, 23, 31, 43, 31, 34, 33, 14, 28, 34, 43, 37, 38, 36, 36, 36, 25, 31, 0, 14, 19, 10,
-        19, 26, 24, 23, 20, 27, 21, 24, 31, 15, 19, 32, 28, 23, 30, 39, 14, 0, 28, 22, 7, 33, 35,
-        28, 25, 34, 31, 35, 40, 25, 29, 45, 34, 28, 13, 36, 19, 28, 0, 22, 33, 21, 31, 26, 24, 32,
-        17, 29, 25, 13, 19, 37, 34, 21, 26, 23, 10, 22, 22, 0, 14, 32, 27, 24, 22, 21, 13, 24, 33,
-        21, 24, 31, 29, 25, 34, 31, 19, 7, 33, 14, 0, 37, 27, 31, 30, 26, 26, 35, 43, 29, 34, 43,
-        34, 31, 9, 43, 26, 33, 21, 32, 37, 0, 34, 25, 24, 31, 34, 29, 17, 19, 20, 39, 36, 19, 29,
-        31, 24, 35, 31, 27, 27, 34, 0, 28, 25, 27, 30, 18, 36, 28, 34, 25, 23, 31, 17, 34, 23, 28,
-        26, 24, 31, 25, 28, 0, 5, 24, 22, 22, 24, 25, 21, 34, 34, 7, 15, 33, 20, 25, 24, 22, 30,
-        24, 25, 5, 0, 23, 20, 19, 23, 23, 23, 30, 30, 9, 26, 14, 27, 34, 32, 21, 26, 31, 27, 24,
-        23, 0, 24, 28, 31, 31, 34, 34, 34, 26, 25, 28, 21, 31, 17, 13, 26, 34, 30, 22, 20, 24, 0,
-        24, 31, 22, 25, 31, 32, 23, 26, 34, 24, 35, 29, 24, 35, 29, 18, 22, 19, 28, 24, 0, 27, 25,
-        28, 13, 13, 26, 16, 43, 31, 40, 25, 33, 43, 17, 36, 24, 23, 31, 31, 27, 0, 24, 25, 37, 37,
-        20, 16, 37, 15, 25, 13, 21, 29, 19, 28, 25, 23, 31, 22, 25, 24, 0, 12, 35, 29, 20, 20, 38,
-        19, 29, 19, 24, 34, 20, 34, 21, 23, 34, 25, 28, 25, 12, 0, 38, 32, 17, 36, 36, 32, 45, 37,
-        31, 43, 39, 25, 34, 30, 34, 31, 13, 37, 35, 38, 0, 21, 37, 34, 36, 28, 34, 34, 29, 34, 36,
-        23, 34, 30, 34, 32, 13, 37, 29, 32, 21, 0, 36, 12, 36, 23, 28, 21, 25, 31, 19, 31, 7, 9,
-        26, 23, 26, 20, 20, 17, 37, 36, 0,
+    const MATRIX: [f64; 400] = [
+        0f64, 37f64, 25f64, 30f64, 13f64, 26f64, 34f64, 9f64, 29f64, 17f64, 15f64, 26f64, 25f64,
+        26f64, 16f64, 16f64, 20f64, 36f64, 34f64, 12f64, 37f64, 0f64, 31f64, 39f64, 36f64, 23f64,
+        31f64, 43f64, 31f64, 34f64, 33f64, 14f64, 28f64, 34f64, 43f64, 37f64, 38f64, 36f64, 36f64,
+        36f64, 25f64, 31f64, 0f64, 14f64, 19f64, 10f64, 19f64, 26f64, 24f64, 23f64, 20f64, 27f64,
+        21f64, 24f64, 31f64, 15f64, 19f64, 32f64, 28f64, 23f64, 30f64, 39f64, 14f64, 0f64, 28f64,
+        22f64, 7f64, 33f64, 35f64, 28f64, 25f64, 34f64, 31f64, 35f64, 40f64, 25f64, 29f64, 45f64,
+        34f64, 28f64, 13f64, 36f64, 19f64, 28f64, 0f64, 22f64, 33f64, 21f64, 31f64, 26f64, 24f64,
+        32f64, 17f64, 29f64, 25f64, 13f64, 19f64, 37f64, 34f64, 21f64, 26f64, 23f64, 10f64, 22f64,
+        22f64, 0f64, 14f64, 32f64, 27f64, 24f64, 22f64, 21f64, 13f64, 24f64, 33f64, 21f64, 24f64,
+        31f64, 29f64, 25f64, 34f64, 31f64, 19f64, 7f64, 33f64, 14f64, 0f64, 37f64, 27f64, 31f64,
+        30f64, 26f64, 26f64, 35f64, 43f64, 29f64, 34f64, 43f64, 34f64, 31f64, 9f64, 43f64, 26f64,
+        33f64, 21f64, 32f64, 37f64, 0f64, 34f64, 25f64, 24f64, 31f64, 34f64, 29f64, 17f64, 19f64,
+        20f64, 39f64, 36f64, 19f64, 29f64, 31f64, 24f64, 35f64, 31f64, 27f64, 27f64, 34f64, 0f64,
+        28f64, 25f64, 27f64, 30f64, 18f64, 36f64, 28f64, 34f64, 25f64, 23f64, 31f64, 17f64, 34f64,
+        23f64, 28f64, 26f64, 24f64, 31f64, 25f64, 28f64, 0f64, 5f64, 24f64, 22f64, 22f64, 24f64,
+        25f64, 21f64, 34f64, 34f64, 7f64, 15f64, 33f64, 20f64, 25f64, 24f64, 22f64, 30f64, 24f64,
+        25f64, 5f64, 0f64, 23f64, 20f64, 19f64, 23f64, 23f64, 23f64, 30f64, 30f64, 9f64, 26f64,
+        14f64, 27f64, 34f64, 32f64, 21f64, 26f64, 31f64, 27f64, 24f64, 23f64, 0f64, 24f64, 28f64,
+        31f64, 31f64, 34f64, 34f64, 34f64, 26f64, 25f64, 28f64, 21f64, 31f64, 17f64, 13f64, 26f64,
+        34f64, 30f64, 22f64, 20f64, 24f64, 0f64, 24f64, 31f64, 22f64, 25f64, 31f64, 32f64, 23f64,
+        26f64, 34f64, 24f64, 35f64, 29f64, 24f64, 35f64, 29f64, 18f64, 22f64, 19f64, 28f64, 24f64,
+        0f64, 27f64, 25f64, 28f64, 13f64, 13f64, 26f64, 16f64, 43f64, 31f64, 40f64, 25f64, 33f64,
+        43f64, 17f64, 36f64, 24f64, 23f64, 31f64, 31f64, 27f64, 0f64, 24f64, 25f64, 37f64, 37f64,
+        20f64, 16f64, 37f64, 15f64, 25f64, 13f64, 21f64, 29f64, 19f64, 28f64, 25f64, 23f64, 31f64,
+        22f64, 25f64, 24f64, 0f64, 12f64, 35f64, 29f64, 20f64, 20f64, 38f64, 19f64, 29f64, 19f64,
+        24f64, 34f64, 20f64, 34f64, 21f64, 23f64, 34f64, 25f64, 28f64, 25f64, 12f64, 0f64, 38f64,
+        32f64, 17f64, 36f64, 36f64, 32f64, 45f64, 37f64, 31f64, 43f64, 39f64, 25f64, 34f64, 30f64,
+        34f64, 31f64, 13f64, 37f64, 35f64, 38f64, 0f64, 21f64, 37f64, 34f64, 36f64, 28f64, 34f64,
+        34f64, 29f64, 34f64, 36f64, 23f64, 34f64, 30f64, 34f64, 32f64, 13f64, 37f64, 29f64, 32f64,
+        21f64, 0f64, 36f64, 12f64, 36f64, 23f64, 28f64, 21f64, 25f64, 31f64, 19f64, 31f64, 7f64,
+        9f64, 26f64, 23f64, 26f64, 20f64, 20f64, 17f64, 37f64, 36f64, 0f64,
     ];
 
-    /// Returns a reference to the flattened 20×20 distance matrix for the `Sneath` dataset.
+    /// Returns a reference to the full amino acid substitution matrix.
     ///
-    /// The matrix contains `u16` values stored in row-major order.
-    /// Use `lookup(a, b)` to retrieve distances between two amino acids using
-    /// the correct symmetric or asymmetric logic.
+    /// This function provides direct access to the raw 20×20 distance matrix
+    /// associated with this metric. The matrix is flattened into a one-dimensional
+    /// array in **row-major order**, where the index of a pair `(i, j)` can be
+    /// computed as `i * 20 + j`.
+    ///
+    /// The values represent pairwise distances between amino acids as defined
+    /// by the metric. These values are `f64` values converted from the original
+    /// input data. The matrix should generally be accessed through the
+    /// [`lookup`](Self::lookup) method for semantic clarity and optionality.
     ///
     /// # Returns
-    /// A reference to a static array of length 400 representing the full matrix.
+    ///
+    /// A reference to the static array of 400 `f64` values representing the
+    /// amino acid substitution matrix.
     ///
     /// # Example
+    ///
     /// ```
-    /// use variant_forge_lib::datasets::sneath::Sneath;
+    /// use variant_forge_lib::datasets::Sneath;
     ///
     /// let matrix = Sneath::matrix();
     /// let distance = matrix[0 * 20 + 1]; // A → R
+    /// assert!(distance >= 0.0);
     /// ```
     #[must_use]
-    pub const fn matrix() -> &'static [u16; 400] {
+    pub const fn matrix() -> &'static [f64; 400] {
         &Self::MATRIX
     }
 }
 
 impl DistanceMetric for Sneath {
-    type Value = u16;
-
     fn name(&self) -> &'static str {
         "Sneath"
     }
@@ -85,7 +111,7 @@ impl DistanceMetric for Sneath {
         true
     }
 
-    fn lookup(&self, a: AminoAcid, b: AminoAcid) -> Option<Self::Value> {
+    fn lookup(&self, a: AminoAcid, b: AminoAcid) -> Option<f64> {
         let i = a.index() * 20 + b.index();
         let j = b.index() * 20 + a.index();
         let idx = if i <= j {
@@ -94,5 +120,26 @@ impl DistanceMetric for Sneath {
             j
         };
         Some(Self::MATRIX[idx])
+    }
+}
+
+#[allow(clippy::unwrap_used)]
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_lookup_nonzero() {
+        let metric = Sneath;
+        let d = metric.lookup(AminoAcid::A, AminoAcid::V);
+        assert!(d.is_some());
+        assert!(d.unwrap() > 0.0);
+    }
+    #[test]
+    fn test_symmetry() {
+        let metric = Sneath;
+        assert_eq!(
+            metric.lookup(AminoAcid::A, AminoAcid::V),
+            metric.lookup(AminoAcid::V, AminoAcid::A)
+        );
     }
 }

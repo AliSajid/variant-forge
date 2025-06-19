@@ -3,162 +3,97 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-use crate::AminoAcid;
+//! Trait definition for amino acid distance metrics.
+//!
+//! Contains the [`DistanceMetric`] trait, which all
+//! substitution matrices must implement.
+use crate::models::AminoAcid;
 
-/// A trait for implementing distance metrics between amino acids.
+/// A trait for implementing amino acid substitution distance metrics.
 ///
-/// This trait provides a common interface for amino acid distance metrics that quantify
-/// the physicochemical and evolutionary differences between amino acid pairs. These distances
-/// are used to calculate functional "distance" between peptides by summing the individual
-/// amino acid distances at each position.
+/// This trait defines a common interface for computing the "distance"
+/// between pairs of amino acids, representing differences in chemical,
+/// physical, or evolutionary properties. These distances can be used
+/// to compare individual amino acid substitutions or entire peptides.
 ///
-/// # Supported Distance Metrics
+/// # Supported Metrics
 ///
-/// This trait is designed to support the following established amino acid distance metrics:
+/// This trait is implemented by a variety of established metrics:
 ///
-/// - **Grantham Distance**: Based on composition, polarity, and molecular volume differences
-/// - **Miyata Distance**: Derived from physicochemical properties including hydrophobicity and
-///   volume
-/// - **Sneath Distance**: Based on taxonomic and physicochemical relationships
-/// - **Epstein Distance**: Considers amino acid exchange frequencies and chemical properties
-/// - **Experimental Exchangeability**: Based on observed substitution rates in laboratory
-///   experiments
+/// - [`Grantham`](crate::datasets::Grantham): Based on composition, polarity, and molecular volume.
+/// - [`Miyata`](crate::datasets::Miyata): Based on hydrophobicity and volume.
+/// - [`Sneath`](crate::datasets::Sneath): Combines taxonomic and biochemical similarity.
+/// - [`Epstein`](crate::datasets::Epstein): Derived from observed chemical groupings.
+/// - [`Exchangability`](crate::datasets::Exchangability): Based on empirical substitution rates.
 ///
-/// # Peptide Distance Calculation
+/// All metrics return a distance as an `f64`, regardless of internal representation.
 ///
-/// The primary use case is calculating distances between peptides of equal length by:
-/// 1. Computing the distance between amino acids at each corresponding position
-/// 2. Summing these individual distances to get the total peptide distance
+/// # Example Use Cases
 ///
-/// ```rust
-/// use variant_forge_lib::{
-///     AminoAcid,
-///     DistanceMetric,
-/// };
-///
-/// fn peptide_distance<M: DistanceMetric>(
-///     metric: &M,
-///     peptide1: &[AminoAcid],
-///     peptide2: &[AminoAcid],
-/// ) -> Option<M::Value>
-/// where
-///     M::Value: std::ops::Add<Output = M::Value> + Default,
-/// {
-///     if peptide1.len() != peptide2.len() {
-///         return None;
-///     }
-///
-///     let mut total_distance = M::Value::default();
-///     for (aa1, aa2) in peptide1.iter().zip(peptide2.iter()) {
-///         let distance = metric.lookup(*aa1, *aa2)?;
-///         total_distance = total_distance + distance;
-///     }
-///     Some(total_distance)
-/// }
-///
-/// // Example usage
-/// let grantham = variant_forge_lib::Grantham;
-/// let peptide1 = vec![AminoAcid::A, AminoAcid::L, AminoAcid::A];
-/// let peptide2 = vec![AminoAcid::V, AminoAcid::I, AminoAcid::S];
-///
-/// if let Some(distance) = peptide_distance(&grantham, &peptide1, &peptide2) {
-///     println!("Peptide distance: {:?}", distance);
-/// }
-/// ```
+/// - Compute the distance between two amino acids
+/// - Compare peptide similarity by summing per-position distances
+/// - Select different metrics dynamically for sensitivity analysis
 ///
 /// # Examples
 ///
+/// Basic usage:
+///
 /// ```rust
-/// use variant_forge_lib::{self, AminoAcid, DistanceMetric};
+/// use variant_forge_lib::models::{
+///     AminoAcid,
+///     DistanceMetric,
+///     MetricDataset,
+/// };
 ///
-/// // Example: Grantham distance implementation
-/// let grantham = variant_forge_lib::Grantham;
+/// let metric = MetricDataset::Grantham(Default::default());
 ///
-/// // Get distance between individual amino acids
-/// let distance = grantham.lookup(AminoAcid::A, AminoAcid::V);
-/// println!("Grantham distance Ala->Val: {:?}", distance);
+/// let d = metric.lookup(AminoAcid::A, AminoAcid::V);
+/// println!("Ala → Val distance: {:?}", d);
 ///
-/// // All supported metrics are symmetric
+/// // Metrics are usually symmetric
 /// assert_eq!(
-///     grantham.lookup(AminoAcid::A, AminoAcid::V),
-///     grantham.lookup(AminoAcid::V, AminoAcid::A)
+///     metric.lookup(AminoAcid::A, AminoAcid::V),
+///     metric.lookup(AminoAcid::V, AminoAcid::A)
 /// );
-///
-/// // Compare different amino acid pairs
-/// let close_pair = grantham.lookup(AminoAcid::A, AminoAcid::V);  // Similar properties
-/// let distant_pair = grantham.lookup(AminoAcid::A, AminoAcid::W); // Very different
-///
-/// if let (Some(close), Some(distant)) = (close_pair, distant_pair) {
-///     assert!(close < distant); // Ala-Val should be closer than Ala-Trp
-/// }
 /// ```
-#[allow(dead_code)]
 pub trait DistanceMetric {
-    /// The numeric type used to represent distance values.
-    ///
-    /// Must implement `Copy` for efficiency, `PartialOrd` for comparisons,
-    /// and `Debug` for diagnostic output. Common types include:
-    /// - `f32` for memory-efficient floating point
-    /// - `u32` for non-negative integer distances
-    type Value: Copy + PartialOrd + std::fmt::Debug;
-
     /// Returns a human-readable name for this distance metric.
     ///
-    /// This is useful for logging, debugging, and user interfaces where the
-    /// specific metric being used needs to be identified.
-    ///
-    /// # Returns
-    ///
-    /// A static string slice containing the metric name.
+    /// Useful for logging, UI display, or debugging.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// use variant_forge_lib::{
+    /// use variant_forge_lib::models::{
     ///     DistanceMetric,
-    ///     Grantham,
+    ///     MetricDataset,
     /// };
     ///
-    /// println!("Using metric: {}", Grantham.name());
+    /// let metric = MetricDataset::Grantham(Default::default());
+    /// let metric_name = metric.name();
+    /// println!("Using metric: {metric_name}");
     /// ```
     fn name(&self) -> &'static str;
 
-    /// Returns whether this distance metric is symmetric.
+    /// Returns whether this metric is symmetric.
     ///
-    /// A symmetric metric satisfies: `distance(a, b) == distance(b, a)`
-    /// Most distance metrics are symmetric, but some specialized metrics
-    /// (like directional substitution matrices) may not be.
-    ///
-    /// This information can be used for optimizations when calculating
-    /// distance matrices or when the order of comparison doesn't matter.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the metric is symmetric, `false` otherwise.
+    /// A symmetric metric satisfies `lookup(a, b) == lookup(b, a)`.
+    /// Most substitution matrices follow this pattern.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// use variant_forge_lib::{
-    ///     self,
+    /// use variant_forge_lib::models::{
     ///     DistanceMetric,
+    ///     MetricDataset,
     /// };
     ///
-    /// let grantham = variant_forge_lib::Grantham;
-    /// let epstein = variant_forge_lib::Epstein;
-    ///
-    /// println!(
-    ///     "Is Grantham distance Symmetric? {}",
-    ///     grantham.is_symmetric()
-    /// );
-    /// println!("Is Epstein distance Symmetric? {}", epstein.is_symmetric());
+    /// let epstein = MetricDataset::Epstein(Default::default());
+    /// assert!(!epstein.is_symmetric());
     /// ```
     fn is_symmetric(&self) -> bool;
 
-    /// Looks up the distance between two amino acids.
-    ///
-    /// This is the core method that computes or retrieves the distance value
-    /// between any two amino acids according to this metric's definition.
+    /// Computes the distance between two amino acids.
     ///
     /// # Arguments
     ///
@@ -167,35 +102,23 @@ pub trait DistanceMetric {
     ///
     /// # Returns
     ///
-    /// * `Some(Value)` - The distance/similarity score between the amino acids
-    /// * `None` - If the distance cannot be computed (e.g., unsupported amino acid pair)
+    /// * `Some(f64)` - Distance value between the two amino acids
+    /// * `None` - If the pair is unsupported by the metric
     ///
     /// # Examples
     ///
     /// ```rust
-    /// use variant_forge_lib::{
-    ///     self,
+    /// use variant_forge_lib::models::{
     ///     AminoAcid,
     ///     DistanceMetric,
+    ///     MetricDataset,
     /// };
     ///
-    /// let metric = variant_forge_lib::Grantham;
+    /// let metric = MetricDataset::Grantham(Default::default());
     ///
-    /// // Get distance between alanine and valine
     /// if let Some(distance) = metric.lookup(AminoAcid::A, AminoAcid::V) {
-    ///     println!("Ala-Val distance: {:?}", distance);
-    /// }
-    ///
-    /// // Compare distances
-    /// let dist1 = metric.lookup(AminoAcid::A, AminoAcid::V);
-    /// let dist2 = metric.lookup(AminoAcid::A, AminoAcid::F);
-    ///
-    /// match (dist1, dist2) {
-    ///     (Some(d1), Some(d2)) if d1 < d2 => {
-    ///         println!("Ala is closer to Val than to Phe");
-    ///     }
-    ///     _ => println!("Cannot compare distances"),
+    ///     println!("Distance A → V: {:.2}", distance);
     /// }
     /// ```
-    fn lookup(&self, a: AminoAcid, b: AminoAcid) -> Option<Self::Value>;
+    fn lookup(&self, a: AminoAcid, b: AminoAcid) -> Option<f64>;
 }
