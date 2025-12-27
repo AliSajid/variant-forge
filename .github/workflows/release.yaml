@@ -69,7 +69,7 @@ jobs:
             - name: Cache dependencies
               uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2.8.2
             - name: Install cross
-              uses: taiki-e/install-action@de7896b7cd1c7d181266425abbe571b5a8c757bc # v2.65.3
+              uses: taiki-e/install-action@3d30e7d625f7c928dccd48823053b03bb2f6ed05 # v2.65.4
               with:
                 tool: cross
             - name: Configure cross
@@ -135,7 +135,7 @@ jobs:
               run: gpg --list-keys --keyid-format LONG
 
             - name: Install semantic-release-cargo
-              uses: taiki-e/install-action@de7896b7cd1c7d181266425abbe571b5a8c757bc # v2.65.3
+              uses: taiki-e/install-action@3d30e7d625f7c928dccd48823053b03bb2f6ed05 # v2.65.4
               with:
                 tool: semantic-release-cargo@${{env.SEMREL_RUST_VERSION}}
 
