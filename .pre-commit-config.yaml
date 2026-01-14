@@ -54,7 +54,7 @@ repos:
           types: [markdown]
           files: "^(README.md|CONTRIBUTING.md|CODE_OF_CONDUCT.md|guide/src/.*.md)$"
     - repo: https://github.com/commitizen-tools/commitizen
-      rev: v4.11.1
+      rev: v4.11.3
       hooks:
         - id: commitizen
     - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -108,7 +108,7 @@ repos:
           stages:
             - commit-msg
     - repo: https://github.com/Lucas-C/pre-commit-hooks
-      rev: v1.5.5
+      rev: v1.5.6
       hooks:
         - id: forbid-crlf
         - id: remove-crlf
