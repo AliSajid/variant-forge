@@ -1,12 +1,12 @@
-# Experimental Exchangeability Matrix
+# Experimental Exchangability Matrix
 
- This matrix is based on experimental measurements of amino acid exchangeability,
+ This matrix is based on experimental measurements of amino acid exchangability,
  where the ease of substitution is quantified based on observed changes in protein
  function and stability. The data were derived from empirical mutation studies
  and reflect functional tolerance rather than just physical similarity.
 
  **Citation**:
- Yampolsky, L. Y., & Stoltzfus, A. (2005). The exchangeability of amino acids in proteins.\
+ Yampolsky, L. Y., & Stoltzfus, A. (2005). The exchangability of amino acids in proteins.\
  *Genetics*, 170(4), 1459–1472. <https://doi.org/10.1534/genetics.104.039115>
 
  **Value type**: `f32`

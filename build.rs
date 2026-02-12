@@ -26,7 +26,6 @@ struct Dataset {
     input_file:  &'static str,
     doc_file:    &'static str,
     output_file: &'static str,
-    value_type:  &'static str,
     symmetric:   bool,
 }
 
@@ -36,7 +35,6 @@ const DATASETS: &[Dataset] = &[
         input_file:  "data/processed/grantham.csv",
         doc_file:    "data/docs/grantham.md",
         output_file: "src/variant_forge_lib/datasets/grantham.rs",
-        value_type:  "u16",
         symmetric:   true,
     },
     Dataset {
@@ -44,7 +42,6 @@ const DATASETS: &[Dataset] = &[
         input_file:  "data/processed/miyata.csv",
         doc_file:    "data/docs/miyata.md",
         output_file: "src/variant_forge_lib/datasets/miyata.rs",
-        value_type:  "f32",
         symmetric:   true,
     },
     Dataset {
@@ -52,7 +49,6 @@ const DATASETS: &[Dataset] = &[
         input_file:  "data/processed/epstein.csv",
         doc_file:    "data/docs/epstein.md",
         output_file: "src/variant_forge_lib/datasets/epstein.rs",
-        value_type:  "f32",
         symmetric:   false,
     },
     Dataset {
@@ -60,7 +56,6 @@ const DATASETS: &[Dataset] = &[
         input_file:  "data/processed/sneath.csv",
         doc_file:    "data/docs/sneath.md",
         output_file: "src/variant_forge_lib/datasets/sneath.rs",
-        value_type:  "u16",
         symmetric:   true,
     },
     Dataset {
@@ -68,7 +63,6 @@ const DATASETS: &[Dataset] = &[
         input_file:  "data/processed/exchangability.csv",
         doc_file:    "data/docs/exchangability.md",
         output_file: "src/variant_forge_lib/datasets/exchangability.rs",
-        value_type:  "u16",
         symmetric:   false,
     },
 ];
@@ -145,25 +139,21 @@ fn normalize_amino_acid_names() -> HashMap<String, String> {
     map
 }
 
-#[allow(clippy::too_many_lines)]
+#[allow(clippy::too_many_lines, clippy::unwrap_used)]
 fn generate_dataset(dataset: &Dataset) -> std::io::Result<()> {
     let name_map = normalize_amino_acid_names();
-
     let file = File::open(dataset.input_file)?;
     let mut rdr = Reader::from_reader(BufReader::new(file));
 
-    #[allow(clippy::unwrap_used)]
     let headers = rdr
-        .headers()
-        .unwrap()
+        .headers()?
         .iter()
         .skip(1)
         .map(|h| {
-            let h_trimmed = h.trim();
-            let h_upper = h_trimmed.to_uppercase();
+            let h_upper = h.trim().to_uppercase();
             name_map
                 .get(&h_upper)
-                .unwrap_or_else(|| panic!("❌ Unknown header: '{h_trimmed}'"))
+                .unwrap_or_else(|| panic!("❌ Unknown header: {h}"))
                 .clone()
         })
         .collect::<Vec<_>>();
@@ -175,13 +165,11 @@ fn generate_dataset(dataset: &Dataset) -> std::io::Result<()> {
         .collect();
 
     let mut matrix: HashMap<String, Vec<String>> = HashMap::new();
-
-    #[allow(clippy::unwrap_used)]
     for result in rdr.records() {
         let record = result?;
-        let row_label = record.get(0).unwrap();
+        let row_label = record.get(0).unwrap().to_uppercase();
         let row_key = name_map
-            .get(&row_label.to_uppercase())
+            .get(&row_label)
             .unwrap_or_else(|| panic!("Unknown row label: {row_label}"))
             .clone();
 
@@ -189,23 +177,11 @@ fn generate_dataset(dataset: &Dataset) -> std::io::Result<()> {
             .iter()
             .skip(1)
             .map(|v| {
-                let trimmed = v.trim();
-                match dataset.value_type {
-                    "u16" => {
-                        if trimmed == "." {
-                            u16::MAX.to_string()
-                        } else {
-                            trimmed.parse::<u16>().map_or_else(
-                                |_| panic!("Failed to parse u16: {trimmed}"),
-                                |v| v.to_string(),
-                            )
-                        }
-                    }
-                    "f32" => trimmed.parse::<f32>().map_or_else(
-                        |_| panic!("Failed to parse f32: {trimmed}"),
-                        |v| format!("{v}f32"),
-                    ),
-                    _ => panic!("Unsupported value type"),
+                let v = v.trim();
+                if v == "." {
+                    format!("{}f64", f64::from(u16::MAX))
+                } else {
+                    format!("{}f64", v.parse::<f64>().unwrap())
                 }
             })
             .collect();
@@ -220,44 +196,35 @@ fn generate_dataset(dataset: &Dataset) -> std::io::Result<()> {
 
     let mut file = BufWriter::new(File::create(out_path)?);
 
-    let struct_name = dataset.name;
-    let value_type = dataset.value_type;
-    let doc_content = fs::read_to_string(dataset.doc_file).unwrap_or_else(|_| {
-        panic!(
-            "Missing documentation for dataset '{}': {}",
-            dataset.name, dataset.doc_file
-        )
-    });
+    let doc = fs::read_to_string(dataset.doc_file).unwrap_or_default();
 
-    writeln!(
-        file,
-        "//! Auto-generated from {}\n//! Matrix: {}\n//! Symmetric: {}",
-        dataset.input_file, dataset.name, dataset.symmetric
-    )?;
-    writeln!(file, "use crate::AminoAcid;\nuse crate::DistanceMetric;\n")?;
+    writeln!(file, "// SPDX-FileCopyrightText: 2025 Ali Sajid Imami")?;
+    writeln!(file, "// SPDX-License-Identifier: Apache-2.0")?;
+    writeln!(file, "// SPDX-License-Identifier: MIT\n")?;
+    writeln!(file, "//! Auto-generated from `{}`", dataset.input_file)?;
+    writeln!(file, "//! Matrix: `{}`", dataset.name)?;
+    writeln!(file, "//! Symmetric: {}\n", dataset.symmetric)?;
 
-    for line in doc_content.lines() {
-        writeln!(file, "///{line}")?;
+    writeln!(file, "use crate::models::{{AminoAcid, DistanceMetric}};\n")?;
+
+    for line in doc.lines() {
+        writeln!(file, "/// {line}")?;
     }
-    // Write the struct
+
     writeln!(
         file,
-        "#[derive(Debug, Copy, Clone)]\npub struct {struct_name};\n"
+        "#[derive(Debug, Copy, Clone, Default)]\npub struct {};\n",
+        dataset.name
     )?;
 
-    // Start impl block
-    writeln!(file, "impl {struct_name} {{")?;
-    writeln!(file, "    const MATRIX: [{}; {}] = [", value_type, 20 * 20)?;
+    writeln!(file, "impl {} {{", dataset.name)?;
+    writeln!(file, "    const MATRIX: [f64; 400] = [")?;
 
     for row_label in AA_ORDER {
-        let row = matrix
-            .get(row_label)
-            .unwrap_or_else(|| panic!("Missing row: {row_label}"));
+        let row = &matrix[row_label];
         for col_label in AA_ORDER {
-            let col = col_index
-                .get(col_label)
-                .unwrap_or_else(|| panic!("Missing column: {col_label}"));
-            writeln!(file, "        {},", row[*col])?;
+            let col = col_index[col_label];
+            writeln!(file, "        {},", row[col])?;
         }
     }
 
@@ -265,56 +232,32 @@ fn generate_dataset(dataset: &Dataset) -> std::io::Result<()> {
 
     writeln!(
         file,
-        "    /// Returns a reference to the flattened 20×20 distance matrix for the `{}` dataset.",
-        dataset.name
+        "    /// Returns a reference to the full amino acid substitution matrix.\n///\n/// This \
+         function provides direct access to the raw 20×20 distance matrix\n/// associated with \
+         this metric. The matrix is flattened into a one-dimensional\n/// array in **row-major \
+         order**, where the index of a pair `(i, j)` can be\n/// computed as `i * 20 + \
+         j`.\n///\n/// The values represent pairwise distances between amino acids as \
+         defined\n/// by the metric. These values are `f64` values converted from the \
+         original\n/// input data. The matrix should generally be accessed through the\n/// \
+         [`lookup`](Self::lookup) method for semantic clarity and optionality.\n///\n/// # \
+         Returns\n///\n/// A reference to the static array of 400 `f64` values representing \
+         the\n/// amino acid substitution matrix.\n///\n/// # Example\n///\n/// ```\n/// use \
+         variant_forge_lib::datasets::{};\n///\n/// let matrix = {}::matrix();\n/// let distance \
+         = matrix[0 * 20 + 1]; // A → R\n/// assert!(distance >= 0.0);\n/// ```",
+        dataset.name, dataset.name,
     )?;
-    writeln!(file, "    ///")?;
-    writeln!(
-        file,
-        "    /// The matrix contains `{}` values stored in row-major order.",
-        dataset.value_type
-    )?;
-    writeln!(
-        file,
-        "    /// Use `lookup(a, b)` to retrieve distances between two amino acids using"
-    )?;
-    writeln!(file, "    /// the correct symmetric or asymmetric logic.")?;
-    writeln!(file, "    ///")?;
-    writeln!(file, "    /// # Returns")?;
-    writeln!(
-        file,
-        "    /// A reference to a static array of length 400 representing the full matrix."
-    )?;
-    writeln!(file, "    ///")?;
-    writeln!(file, "    /// # Example")?;
-    writeln!(file, "    /// ```")?;
-    writeln!(
-        file,
-        "    /// use variant_forge_lib::datasets::{}::{};",
-        dataset.name.to_lowercase(),
-        dataset.name
-    )?;
-    writeln!(file, "    ///")?;
-    writeln!(file, "    /// let matrix = {}::matrix();", dataset.name)?;
-    writeln!(file, "    /// let distance = matrix[0 * 20 + 1]; // A → R")?;
-    writeln!(file, "    /// ```")?;
     writeln!(file, "#[must_use]")?;
     writeln!(
         file,
-        "    pub const fn matrix() -> &'static [{}; {}] {{",
-        value_type,
-        20 * 20
+        "    pub const fn matrix() -> &'static [f64; 400] {{ &Self::MATRIX }}"
     )?;
-    writeln!(file, "        &Self::MATRIX")?;
-    writeln!(file, "    }}")?;
     writeln!(file, "}}\n")?;
 
-    // Implement trait
-    writeln!(file, "impl DistanceMetric for {struct_name} {{")?;
-    writeln!(file, "    type Value = {value_type};")?;
+    writeln!(file, "impl DistanceMetric for {} {{", dataset.name)?;
     writeln!(
         file,
-        "    fn name(&self) -> &'static str {{ \"{struct_name}\" }}",
+        "    fn name(&self) -> &'static str {{ \"{}\" }}",
+        dataset.name
     )?;
     writeln!(
         file,
@@ -323,7 +266,7 @@ fn generate_dataset(dataset: &Dataset) -> std::io::Result<()> {
     )?;
     writeln!(
         file,
-        "    fn lookup(&self, a: AminoAcid, b: AminoAcid) -> Option<Self::Value> {{"
+        "    fn lookup(&self, a: AminoAcid, b: AminoAcid) -> Option<f64> {{"
     )?;
     writeln!(file, "        let i = a.index() * 20 + b.index();")?;
     if dataset.symmetric {
@@ -333,16 +276,35 @@ fn generate_dataset(dataset: &Dataset) -> std::io::Result<()> {
         writeln!(file, "        let idx = i;")?;
     }
     writeln!(file, "        Some(Self::MATRIX[idx])")?;
-    writeln!(file, "    }}\n}}")?;
+    writeln!(file, "    }}")?;
+    writeln!(file, "}}\n")?;
 
-    // Ensure the file is properly closed before formatting
-    drop(file);
-
-    // Format the generated file
-    if let Err(e) = format_rust_file(dataset.output_file) {
-        eprintln!("Warning: Failed to format {}: {}", dataset.output_file, e);
-        // Continue with the build even if formatting fails
+    writeln!(file, "#[allow(clippy::unwrap_used)]")?;
+    writeln!(file, "#[cfg(test)] mod tests {{")?;
+    writeln!(file, "    use super::*;")?;
+    writeln!(file, "    #[test] fn test_lookup_nonzero() {{")?;
+    writeln!(file, "        let metric = {};", dataset.name)?;
+    writeln!(
+        file,
+        "        let d = metric.lookup(AminoAcid::A, AminoAcid::V);"
+    )?;
+    writeln!(file, "        assert!(d.is_some());")?;
+    writeln!(file, "        assert!(d.unwrap() > 0.0);")?;
+    writeln!(file, "    }}")?;
+    if dataset.symmetric {
+        writeln!(file, "    #[test] fn test_symmetry() {{")?;
+        writeln!(file, "        let metric = {};", dataset.name)?;
+        writeln!(
+            file,
+            "        assert_eq!(metric.lookup(AminoAcid::A, AminoAcid::V), \
+             metric.lookup(AminoAcid::V, AminoAcid::A));"
+        )?;
+        writeln!(file, "    }}")?;
     }
+    writeln!(file, "}}\n")?;
+
+    drop(file);
+    format_rust_file(dataset.output_file).ok();
 
     Ok(())
 }
