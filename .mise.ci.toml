@@ -5,4 +5,4 @@
 
 [tools]
 "cargo:cargo-llvm-cov" = "0.6.16"
-"cargo:cargo-nextest" = "0.9.87"
+"cargo:cargo-nextest" = "0.9.150"
